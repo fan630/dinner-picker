@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="今晚吃什麼">
+<meta name="theme-color" content="#1a1a2e">
+<title>今晚吃什麼？</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #0f0f1a;
+  --surface: #1a1a2e;
+  --surface2: #22223b;
+  --accent: #c9a96e;
+  --accent2: #e8c99a;
+  --text: #f0ece0;
+  --text2: #a09880;
+  --text3: #6b6458;
+  --xinyi: #9b8ec4;
+  --wuxing: #7ab87a;
+  --daan: #c98068;
+  --border: rgba(201,169,110,0.15);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans TC', sans-serif;
+  font-weight: 300;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+/* Background stars */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, rgba(201,169,110,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 60% 15%, rgba(255,255,255,0.2) 0%, transparent 100%),
+    radial-gradient(1px 1px at 80% 50%, rgba(201,169,110,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 40% 70%, rgba(255,255,255,0.15) 0%, transparent 100%),
+    radial-gradient(1px 1px at 10% 80%, rgba(201,169,110,0.2) 0%, transparent 100%),
+    radial-gradient(1px 1px at 90% 20%, rgba(255,255,255,0.25) 0%, transparent 100%),
+    radial-gradient(1px 1px at 50% 90%, rgba(201,169,110,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 75% 75%, rgba(255,255,255,0.1) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app {
+  position: relative;
+  z-index: 1;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 0 100px;
+  min-height: 100dvh;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  padding: 48px 24px 24px;
+  border-bottom: 0.5px solid var(--border);
+}
+.header-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.header h1 {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+.header-sub {
+  font-size: 13px;
+  color: var(--text3);
+  margin-top: 6px;
+}
+
+/* Filter tabs */
+.filter-section {
+  padding: 16px 20px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 0.5px solid var(--border);
+}
+.filter-section::-webkit-scrollbar { display: none; }
+.filter-btn {
+  flex-shrink: 0;
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  padding: 7px 16px;
+  border-radius: 20px;
+  border: 0.5px solid var(--border);
+  background: transparent;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.filter-btn.active-all  { background: var(--accent); border-color: var(--accent); color: #1a1a2e; font-weight: 500; }
+.filter-btn.active-xinyi { background: var(--xinyi); border-color: var(--xinyi); color: #fff; font-weight: 500; }
+.filter-btn.active-wuxing { background: var(--wuxing); border-color: var(--wuxing); color: #fff; font-weight: 500; }
+.filter-btn.active-daan  { background: var(--daan); border-color: var(--daan); color: #fff; font-weight: 500; }
+
+/* Spin zone */
+.spin-zone {
+  padding: 28px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 0.5px solid var(--border);
+}
+
+.result-frame {
+  width: 100%;
+  min-height: 140px;
+  border: 0.5px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.result-frame::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,169,110,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.result-placeholder {
+  font-size: 14px;
+  color: var(--text3);
+  text-align: center;
+  line-height: 1.8;
+}
+
+.result-name {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+  text-align: center;
+  line-height: 1.3;
+}
+.result-area-tag {
+  margin-top: 10px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+.tag-xinyi { background: rgba(155,142,196,0.15); color: var(--xinyi); border: 0.5px solid rgba(155,142,196,0.3); }
+.tag-wuxing { background: rgba(122,184,122,0.15); color: var(--wuxing); border: 0.5px solid rgba(122,184,122,0.3); }
+.tag-daan   { background: rgba(201,128,104,0.15); color: var(--daan);   border: 0.5px solid rgba(201,128,104,0.3); }
+
+.spin-btn {
+  width: 100%;
+  font-family: 'Noto Serif TC', serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 16px;
+  border-radius: 14px;
+  border: 0.5px solid var(--accent);
+  background: linear-gradient(135deg, rgba(201,169,110,0.15) 0%, rgba(201,169,110,0.05) 100%);
+  color: var(--accent2);
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.spin-btn:active { transform: scale(0.97); }
+.spin-btn.spinning { opacity: 0.5; pointer-events: none; }
+.spin-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(201,169,110,0.08);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.spin-btn:hover::after { opacity: 1; }
+
+/* History */
+.history-section {
+  padding: 16px 24px;
+  border-bottom: 0.5px solid var(--border);
+  min-height: 60px;
+}
+.history-label {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--text3);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.history-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.history-chip {
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: var(--surface2);
+  color: var(--text2);
+  border-left: 3px solid;
+}
+
+/* Restaurant list */
+.list-section { padding: 20px 24px; }
+.list-area-block { margin-bottom: 20px; }
+.list-area-title {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.area-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.dot-xinyi { background: var(--xinyi); }
+.dot-wuxing { background: var(--wuxing); }
+.dot-daan   { background: var(--daan); }
+
+.list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 6px;
+}
+.list-item {
+  font-size: 12px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 0.5px solid var(--border);
+  color: var(--text2);
+  background: var(--surface);
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+  line-height: 1.3;
+  word-break: keep-all;
+}
+.list-item:active { transform: scale(0.95); }
+.list-item.excluded {
+  opacity: 0.3;
+  text-decoration: line-through;
+  background: transparent;
+}
+
+.list-hint {
+  font-size: 11px;
+  color: var(--text3);
+  text-align: right;
+  margin-bottom: 12px;
+  letter-spacing: 0.03em;
+}
+.pool-count {
+  font-size: 12px;
+  color: var(--text3);
+  margin-left: auto;
+}
+
+/* Bottom safe area */
+.safe-area { height: env(safe-area-inset-bottom, 20px); }
+
+/* Spinning animation */
+@keyframes shimmer {
+  0%   { opacity: 1; transform: scale(1); }
+  50%  { opacity: 0.6; transform: scale(0.97); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.result-name.spinning-text { animation: shimmer 0.12s infinite; }
+
+/* Celebrate animation */
+@keyframes celebrate {
+  0%   { transform: scale(0.9); opacity: 0; }
+  60%  { transform: scale(1.04); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.result-name.celebrate { animation: celebrate 0.4s cubic-bezier(0.175,0.885,0.32,1.275) forwards; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="header">
+    <div class="header-eyebrow">台北美食抽籤</div>
+    <h1>今晚吃什麼？</h1>
+    <p class="header-sub">讓命運決定今晚的選擇</p>
+  </div>
+
+  <div class="filter-section" id="filterSection">
+    <button class="filter-btn active-all" data-area="all">✦ 全部</button>
+    <button class="filter-btn" data-area="xinyi">信義安和</button>
+    <button class="filter-btn" data-area="wuxing">吳興街</button>
+    <button class="filter-btn" data-area="daan">大安區</button>
+  </div>
+
+  <div class="spin-zone">
+    <div class="result-frame" id="resultFrame">
+      <p class="result-placeholder" id="placeholder">按下抽籤<br>讓命運決定今晚吃什麼 ✦</p>
+      <div id="resultContent" style="display:none; flex-direction:column; align-items:center;">
+        <span class="result-name" id="resultName"></span>
+        <span class="result-area-tag" id="resultTag"></span>
+      </div>
+    </div>
+    <button class="spin-btn" id="spinBtn" onclick="spin()">✦ 抽 籤 ✦</button>
+  </div>
+
+  <div class="history-section" id="historySection" style="display:none">
+    <div class="history-label">今天抽過</div>
+    <div class="history-chips" id="historyChips"></div>
+  </div>
+
+  <div class="list-section">
+    <p class="list-hint">點擊餐廳可暫時排除 / 再點恢復</p>
+    <div id="listContainer"></div>
+  </div>
+
+  <div class="safe-area"></div>
+</div>
+
+<script>
+const DATA = {
+  xinyi: [
+    "The Public House","Pico Pico","文火處方","雞二拉麵","座位有限","Lay Back","Pang","Masa",
+    "蘇媽媽湯圓","Nomzie","通庵咖喱","味鼎","Everywhere Burger","Pang Taco","鴨箱",
+    "The Slice Shop","Celebread","Burger Co","Rolling Eyes","SEASON Artisan Pâtissier",
+    "Tableau by Craig Yang","深深","老李牛雜湯","王記豆腐捲","老張碳烤燒餅","石家刈包",
+    "十全排骨","黃土魠魚塊","小胖鹹水雞","格燈炸雞","御品元湯圓","巧緣滷肉飯","馬祖麵",
+    "川味食堂","昭和浪漫冰室"
+  ],
+  wuxing: [
+    "鐵板現炒便當","碰麵麵食館","依鼎越式美食","阿弘潤餅"
+  ],
+  daan: [
+    "光司義大利麵","農粹咖哩","無名咖哩","瑞安豆漿大王","ROAST Burger","四維紅麵線",
+    "餓菱居","双生炒飯","桔梗","周記切仔麵","未央咖啡","山水伯豆花","姥義麵",
+    "蔣記家薌麵","牛莊園","永和豆漿大王","Noon","七里亭茶食館","Kaffe 冇","桔梗三明治",
+    "舒服生活","Congrats Cafe","饞食坊","Brun","溫度","Swell Co Cafe","Fourninetine Bakery",
+    "No Name 咖哩","成都老么牛肉麵","Le Corner 早餐","御品山西刀削麵","文火處方","雞二拉麵"
+  ]
+};
+
+const AREA_LABEL = { xinyi:"信義安和", wuxing:"吳興街", daan:"大安區" };
+const AREA_TAG_CLASS = { xinyi:"tag-xinyi", wuxing:"tag-wuxing", daan:"tag-daan" };
+const AREA_COLOR = { xinyi:"#9b8ec4", wuxing:"#7ab87a", daan:"#c98068" };
+const AREA_DOT = { xinyi:"dot-xinyi", wuxing:"dot-wuxing", daan:"dot-daan" };
+
+let currentArea = "all";
+let excluded = new Set();
+let history = [];
+let spinning = false;
+
+function getPool() {
+  const areas = currentArea === "all" ? ["xinyi","wuxing","daan"] : [currentArea];
+  const pool = [];
+  areas.forEach(a => DATA[a].forEach(name => {
+    if (!excluded.has(name)) pool.push({ name, area: a });
+  }));
+  return pool;
+}
+
+function spin() {
+  if (spinning) return;
+  const pool = getPool();
+  if (!pool.length) return;
+  spinning = true;
+  document.getElementById("spinBtn").classList.add("spinning");
+  document.getElementById("placeholder").style.display = "none";
+  const content = document.getElementById("resultContent");
+  const nameEl  = document.getElementById("resultName");
+  const tagEl   = document.getElementById("resultTag");
+  content.style.display = "flex";
+  nameEl.classList.remove("celebrate");
+  nameEl.classList.add("spinning-text");
+
+  let ticks = 0;
+  const maxTicks = 24;
+  const iv = setInterval(() => {
+    const r = pool[Math.floor(Math.random() * pool.length)];
+    nameEl.textContent = r.name;
+    tagEl.textContent  = AREA_LABEL[r.area];
+    tagEl.className    = "result-area-tag " + AREA_TAG_CLASS[r.area];
+    ticks++;
+    if (ticks >= maxTicks) {
+      clearInterval(iv);
+      const final = pool[Math.floor(Math.random() * pool.length)];
+      nameEl.textContent = final.name;
+      tagEl.textContent  = AREA_LABEL[final.area];
+      tagEl.className    = "result-area-tag " + AREA_TAG_CLASS[final.area];
+      nameEl.classList.remove("spinning-text");
+      void nameEl.offsetWidth;
+      nameEl.classList.add("celebrate");
+      addHistory(final);
+      spinning = false;
+      document.getElementById("spinBtn").classList.remove("spinning");
+    }
+  }, 65);
+}
+
+function addHistory(item) {
+  history.unshift(item);
+  if (history.length > 6) history.pop();
+  const section = document.getElementById("historySection");
+  const chips   = document.getElementById("historyChips");
+  section.style.display = "block";
+  chips.innerHTML = history.map(h =>
+    `<span class="history-chip" style="border-left-color:${AREA_COLOR[h.area]}">${h.name}</span>`
+  ).join("");
+}
+
+function setFilter(area) {
+  currentArea = area;
+  document.querySelectorAll(".filter-btn").forEach(b => {
+    b.className = "filter-btn";
+    if (b.dataset.area === area) b.classList.add("active-" + area);
+  });
+  renderList();
+}
+
+function toggleExclude(name) {
+  excluded.has(name) ? excluded.delete(name) : excluded.add(name);
+  renderList();
+}
+
+function renderList() {
+  const areas = currentArea === "all" ? ["xinyi","wuxing","daan"] : [currentArea];
+  const container = document.getElementById("listContainer");
+  container.innerHTML = areas.map(a => {
+    const items = DATA[a].map(name =>
+      `<div class="list-item${excluded.has(name) ? " excluded" : ""}" onclick="toggleExclude(${JSON.stringify(name)})">${name}</div>`
+    ).join("");
+    const active = DATA[a].filter(n => !excluded.has(n)).length;
+    return `
+      <div class="list-area-block">
+        <div class="list-area-title">
+          <span class="area-dot ${AREA_DOT[a]}"></span>
+          <span style="color:${AREA_COLOR[a]}">${AREA_LABEL[a]}</span>
+          <span class="pool-count">${active}/${DATA[a].length}</span>
+        </div>
+        <div class="list-grid">${items}</div>
+      </div>`;
+  }).join("");
+}
+
+document.getElementById("filterSection").addEventListener("click", e => {
+  const btn = e.target.closest(".filter-btn");
+  if (btn) setFilter(btn.dataset.area);
+});
+
+renderList();
+</script>
+</body>
+</html>
