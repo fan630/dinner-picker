@@ -25,6 +25,8 @@
   --xinyi: #9b8ec4;
   --wuxing: #7ab87a;
   --daan: #c98068;
+  --huangren: #76b900;
+  --jhr: #e8732a;
   --border: rgba(201,169,110,0.15);
 }
 
@@ -120,6 +122,8 @@ body::before {
 .filter-btn.active-xinyi { background: var(--xinyi); border-color: var(--xinyi); color: #fff; font-weight: 500; }
 .filter-btn.active-wuxing { background: var(--wuxing); border-color: var(--wuxing); color: #fff; font-weight: 500; }
 .filter-btn.active-daan  { background: var(--daan); border-color: var(--daan); color: #fff; font-weight: 500; }
+.filter-btn.active-huangren { background: var(--huangren); border-color: var(--huangren); color: #fff; font-weight: 500; }
+.filter-btn.active-jhr { background: var(--jhr); border-color: var(--jhr); color: #fff; font-weight: 500; }
 
 /* Spin zone */
 .spin-zone {
@@ -180,6 +184,8 @@ body::before {
 .tag-xinyi { background: rgba(155,142,196,0.15); color: var(--xinyi); border: 0.5px solid rgba(155,142,196,0.3); }
 .tag-wuxing { background: rgba(122,184,122,0.15); color: var(--wuxing); border: 0.5px solid rgba(122,184,122,0.3); }
 .tag-daan   { background: rgba(201,128,104,0.15); color: var(--daan);   border: 0.5px solid rgba(201,128,104,0.3); }
+.tag-huangren { background: rgba(118,185,0,0.15); color: var(--huangren); border: 0.5px solid rgba(118,185,0,0.3); }
+.tag-jhr { background: rgba(232,115,42,0.15); color: var(--jhr); border: 0.5px solid rgba(232,115,42,0.3); }
 
 .spin-btn {
   width: 100%;
@@ -257,6 +263,8 @@ body::before {
 .dot-xinyi { background: var(--xinyi); }
 .dot-wuxing { background: var(--wuxing); }
 .dot-daan   { background: var(--daan); }
+.dot-huangren { background: var(--huangren); }
+.dot-jhr { background: var(--jhr); }
 
 .list-grid {
   display: grid;
@@ -330,6 +338,8 @@ body::before {
     <button class="filter-btn" data-area="xinyi">信義安和</button>
     <button class="filter-btn" data-area="wuxing">吳興街</button>
     <button class="filter-btn" data-area="daan">大安區</button>
+    <button class="filter-btn" data-area="huangren">黃仁勳</button>
+    <button class="filter-btn" data-area="jhr">黃仁勳餐廳</button>
   </div>
 
   <div class="spin-zone">
@@ -369,6 +379,60 @@ const DATA = {
   wuxing: [
     "鐵板現炒便當","碰麵麵食館","依鼎越式美食","阿弘潤餅"
   ],
+  jhr: [
+    "犁園湯包館",           // 份量偏多，適合2人+
+    "聚聚私廚",             // 私廚通常最低消費高
+    "驥園川菜餐廳",         // 川菜合菜形式
+    "春韭私廚",             // 私廚形式
+    "老撈麻辣火鍋鴛鴦火鍋", // 火鍋一人份量尷尬+費用高
+    "醉翁漁港海鮮熱炒餐廳", // 熱炒海鮮，合菜為主
+    "吉品海鮮餐廳敦南店",   // 高級海鮮餐廳
+    "三六食府私廚",         // 私廚形式
+    "喜相逢私廚",           // 私廚形式
+    "欣葉台灣料理創始店",   // 合菜台菜，人均偏高
+    "Oncore 響艷都市會所信義店", // 高端餐廳，江振誠顧問
+    "8號極品海鮮餐廳",      // 海鮮餐廳，合菜為主
+    "士林台南海鮮會館",     // 合菜海鮮
+    "台南永康劉家莊牛肉爐", // 爐物份量大
+    "國賓中餐廳",           // 高級中餐廳
+    "台北嘉佩樂酒店 Capella Taipei", // 五星級，人均極高
+    "鮨成真日本料理",       // 日本料理，人均偏高
+    "貓下去敦北俱樂部"    // 氛圍偏聚會，人均中高
+  ],
+  huangren:  [
+    "花娘小館",
+    "牛耳精緻麵館",
+    "雞家莊長春店",
+    "三重五燈獎豬腳滷肉飯",
+    "富霸王豬腳",
+    "永康街呂桑食堂",
+    "鄒記食舖私廚",         // 私廚但相對平價
+    "王記府城肉粽",
+    "磚窯古早味懷舊餐廳敦南店",
+    "廚房客家小館",
+    "十二月粥品茶飲私房菜",
+    "老漿家早餐店",
+    "金山客家小館創始店",
+    // 夜市類全部
+    "遼寧夜市鵝肉城活海鮮",
+    "寧夏夜市豆花莊",
+    "寧夏夜市爆漿脆皮魷魚",
+    "寧夏夜市圓環邊蚵仔煎",
+    "寧夏夜市甘家燒仙草飲料店",
+    "寧夏夜市詹記水果",
+    "寧夏夜市甲上現炒栗子",
+    "饒河夜市阿嬤自己種的話梅",
+    "四平陽光豆花冰店",
+    "四平商圈台北譽展蜜餞行",
+    "臨江夜市糖葫蘆",
+    "臨江夜市涼圓",
+    "臨江夜市江家甘蔗汁",
+    "臨江夜市再來蔬菜蛋餅",
+    "臨江夜市冰世界雪花冰",
+    "臨江夜市50年阿婆水果",
+    "萊客潤餅捲內湖737夜市分店",
+    "寧夏夜市第89攤"
+  ],
   daan: [
     "光司義大利麵","農粹咖哩","無名咖哩","瑞安豆漿大王","ROAST Burger","四維紅麵線",
     "餓菱居","双生炒飯","周記切仔麵","未央咖啡","山水伯豆花","姥義麵",
@@ -378,10 +442,10 @@ const DATA = {
   ]
 };
 
-const AREA_LABEL = { xinyi:"信義安和", wuxing:"吳興街", daan:"大安區" };
-const AREA_TAG_CLASS = { xinyi:"tag-xinyi", wuxing:"tag-wuxing", daan:"tag-daan" };
-const AREA_COLOR = { xinyi:"#9b8ec4", wuxing:"#7ab87a", daan:"#c98068" };
-const AREA_DOT = { xinyi:"dot-xinyi", wuxing:"dot-wuxing", daan:"dot-daan" };
+const AREA_LABEL = { xinyi:"信義安和", wuxing:"吳興街", daan:"大安區", huangren:"黃仁勳", jhr:"黃仁勳餐廳" };
+const AREA_TAG_CLASS = { xinyi:"tag-xinyi", wuxing:"tag-wuxing", daan:"tag-daan", huangren:"tag-huangren", jhr:"tag-jhr" };
+const AREA_COLOR = { xinyi:"#9b8ec4", wuxing:"#7ab87a", daan:"#c98068", huangren:"#76b900", jhr:"#e8732a" };
+const AREA_DOT = { xinyi:"dot-xinyi", wuxing:"dot-wuxing", daan:"dot-daan", huangren:"dot-huangren", jhr:"dot-jhr" };
 
 let currentArea = "all";
 let excluded = new Set();
@@ -389,7 +453,7 @@ let history = [];
 let spinning = false;
 
 function getPool() {
-  const areas = currentArea === "all" ? ["xinyi","wuxing","daan"] : [currentArea];
+  const areas = currentArea === "all" ? ["xinyi","wuxing","daan","huangren","jhr"] : [currentArea];
   const pool = [];
   areas.forEach(a => DATA[a].forEach(name => {
     if (!excluded.has(name)) pool.push({ name, area: a });
@@ -461,7 +525,7 @@ function toggleExclude(name) {
 }
 
 function renderList() {
-  const areas = currentArea === "all" ? ["xinyi","wuxing","daan"] : [currentArea];
+  const areas = currentArea === "all" ? ["xinyi","wuxing","daan","huangren","jhr"] : [currentArea];
   const container = document.getElementById("listContainer");
   container.innerHTML = areas.map(a => {
     const items = DATA[a].map(name =>
